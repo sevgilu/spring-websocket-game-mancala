@@ -15,7 +15,17 @@ import java.util.*;
 public class MancalaRegistryServiceImpl implements MancalaRegistryService {
     Set<Player> registeredPlayers= new HashSet<>();
     private Map<String, MancalaGame> waitingGames = new HashMap<>();
-    private Map<String, MancalaGame> startedGames = new HashMap<>();
+    private Map<String, MancalaGame> activeGames = new HashMap<>();
+
+    @Override
+    public MancalaGame getActiveMancalaGame(String gameId) {
+        MancalaGame mancalaGame = activeGames.get(gameId);
+        if(mancalaGame == null) {
+            throw  new MancalaRuntimeException("There is no active game with gameId:" + gameId);
+        }
+        return mancalaGame;
+    }
+
     @Override
     public MancalaGameResponse joinGame(Player player) {
         checkForRegisteredPlayer(player);
@@ -65,10 +75,11 @@ public class MancalaRegistryServiceImpl implements MancalaRegistryService {
         mancalaGame.setGameState(GameState.ACTIVE);
         mancalaGame.setCreatorOfTheGame(false);
 
-        startedGames.put(gameId, mancalaGame);
+        activeGames.put(gameId, mancalaGame);
         waitingGames.remove(gameId);
 
         return mancalaGame;
     }
+
 
 }

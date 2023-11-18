@@ -1,7 +1,7 @@
 package com.suslu.spring.websocket.game.mancala.model.response;
 
 import com.suslu.spring.websocket.game.mancala.enums.GameState;
-import com.suslu.spring.websocket.game.mancala.enums.PlayerTurn;
+import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 import com.suslu.spring.websocket.game.mancala.model.Player;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class MancalaGameResponse {
     private Player player1;
     private Player player2;
     private GameState gameState;
-    private PlayerTurn playerTurn;
+    private PlayerType currentPlayer;
     private boolean creatorOfTheGame;
     private List<Integer> pits;
 
@@ -62,12 +62,12 @@ public class MancalaGameResponse {
         this.gameState = gameState;
     }
 
-    public PlayerTurn getPlayerTurn() {
-        return playerTurn;
+    public PlayerType getCurrentPlayer() {
+        return currentPlayer;
     }
 
-    public void setPlayerTurn(PlayerTurn playerTurn) {
-        this.playerTurn = playerTurn;
+    public void setCurrentPlayer(PlayerType currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public boolean isCreatorOfTheGame() {

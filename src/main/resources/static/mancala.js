@@ -1,5 +1,5 @@
-let pageOwner;
-let currentTurn;
+let pageOwnerPlayerType;
+let currentPlayer;
 let gameState;
 
 $(function () {
@@ -45,9 +45,9 @@ function initializePageWithGame(data) {
 
     // set player in the page
     if(data.creatorOfTheGame) {
-        pageOwner = "PLAYER_1";
+        pageOwnerPlayerType = "PLAYER_1";
     } else {
-        pageOwner = "PLAYER_2";
+        pageOwnerPlayerType = "PLAYER_2";
     }
 
     updateBoard(data)
@@ -55,25 +55,24 @@ function initializePageWithGame(data) {
 
 function updateBoard(data) {
     // set whose turn is it
-    currentTurn = data.playerTurn;
-
+    currentPlayer = data.currentPlayer;
     // set state of game
     gameState = data.gameState
-
+    // update pits
     let pits = data.pits;
     for (let i = 0; i < pits.length; i++) {
         $("#pit_" + i).text(pits[i]);
     }
-
 
     if (data.gameState == "WAITING_FOR_PLAYER_2") {
         $("#namePlayer1").background="#333";
         $("#namePlayer2").background="#333";
         $("#gameStateMessage").text("Waiting for opponent...");
     } else if (data.gameState == "ACTIVE") {
-//        $("#gameStateMessage").text("You are playing with " + pageOwner == "PLAYER_1" ? data.player2.name : data.player1.name);
-        $("#gameStateMessage").text("You are " + pageOwner + ". Current turn is on " + currentTurn);
-        if(currentTurn == "PLAYER_1") {
+        $("#bigPitTitlePlayer2").text(data.player2 == null ? "second player" : data.player2.name + "'s larger pit");
+        $("#gameStateMessage").text(pageOwnerPlayerType == currentPlayer ? "It's your turn!" : "Wait! It's the opponent's turn.");
+
+        if(currentPlayer == "PLAYER_1") {
             $("#namePlayer1").background="#1472a9";
             $("#namePlayer2").background="#333";
         } else {
@@ -95,9 +94,7 @@ $(document).ready(function() {
         let validMove = isValidMove(pitIndex);
 
         if(validMove) {
-            let pitValue = $("#" + pitId).text();
-            // TODO
-            alert("selected value " + pitValue)
+            makeMove(pitIndex)
         }
     });
 });
@@ -110,15 +107,15 @@ function isValidMove(pitIndex) {
     } else if(gameState == "FINISHED") {
         alert("Game is over!!!'");
     } else {
-        if(pageOwner != currentTurn) {
+        if(pageOwnerPlayerType != currentPlayer) {
               // it is the NOT page owners turn
             alert("It is not your turn! Please wait for the opponent.");
         } else {
             // it is the page owners turn
             if(pitIndex == 13 || pitIndex == 6) {
                 alert("Big pits are not allowed!");
-            } else if ( (pageOwner == "PLAYER_1" && pitIndex > 6 ) ||
-                        (pageOwner == "PLAYER_2" && pitIndex < 6 )){
+            } else if ( (pageOwnerPlayerType == "PLAYER_1" && pitIndex >= 6 ) ||
+                        (pageOwnerPlayerType == "PLAYER_2" && pitIndex <= 6 )){
                 alert("Choose one of your own pits!");
             } else {
                 validMove = true ;
@@ -126,4 +123,14 @@ function isValidMove(pitIndex) {
         }
     }
     return validMove;
+}
+
+function makeMove(pitIndex) {
+    let destination = "/app/game/move";
+    let jsonBody = JSON.stringify({
+                   'gameId': $("#gameId").val(),
+                   'senderPlayer': pageOwnerPlayerType,
+                   'pitIndex': pitIndex,
+               });
+    sendMessageThroughWebsocket(destination, jsonBody)
 }

@@ -23,3 +23,10 @@ function connectToWebsocket_GameState(gameId){
 
     stompClient.activate();
 }
+
+function sendMessageThroughWebsocket(destination, jsonBody) {
+    stompClient.publish({
+        destination: destination,
+        body: jsonBody
+    });
+}

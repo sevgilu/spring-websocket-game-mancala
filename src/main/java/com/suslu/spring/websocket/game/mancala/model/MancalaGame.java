@@ -1,22 +1,22 @@
 package com.suslu.spring.websocket.game.mancala.model;
 
 import com.suslu.spring.websocket.game.mancala.enums.GameState;
-import com.suslu.spring.websocket.game.mancala.enums.PlayerTurn;
+import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MancalaGame {
-    private static final int PIT_COUNT= 14;
-    private static final int BIG_PIT_INDEX_1= 6;
-    private static final int BIG_PIT_INDEX_2= 13;
-    private static final int STONE_COUNT= 6;
+    public static final int PIT_COUNT= 14;
+    public static final int BIG_PIT_INDEX_1= 6;
+    public static final int BIG_PIT_INDEX_2= 13;
+    public static final int STONE_COUNT= 6;
 
     private String gameId;
     private Player player1;
     private Player player2;
     private GameState gameState;
-    private PlayerTurn playerTurn;
+    private PlayerType currentPlayer;
     private boolean creatorOfTheGame;
     private List<Integer> pits;
 
@@ -26,7 +26,7 @@ public class MancalaGame {
         this.gameId = gameId;
         this.player1 = player1;
         this.gameState = GameState.WAITING_FOR_PLAYER_2;
-        this.playerTurn = PlayerTurn.PLAYER_1;
+        this.currentPlayer = PlayerType.PLAYER_1;
         this.creatorOfTheGame = true;
         initializePits(STONE_COUNT);
     }
@@ -40,6 +40,13 @@ public class MancalaGame {
             } else {
                 pits.add(stoneCount);
             }
+        }
+    }
+    public void switchCurrentPlayer() {
+        if (PlayerType.PLAYER_1 == currentPlayer) {
+            currentPlayer = PlayerType.PLAYER_2;
+        } else {
+            currentPlayer = PlayerType.PLAYER_1;
         }
     }
 
@@ -75,12 +82,12 @@ public class MancalaGame {
         this.gameState = gameState;
     }
 
-    public PlayerTurn getPlayerTurn() {
-        return playerTurn;
+    public PlayerType getCurrentPlayer() {
+        return currentPlayer;
     }
 
-    public void setPlayerTurn(PlayerTurn playerTurn) {
-        this.playerTurn = playerTurn;
+    public void setCurrentPlayer(PlayerType currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public boolean isCreatorOfTheGame() {
@@ -98,4 +105,5 @@ public class MancalaGame {
     public void setPits(List<Integer> pits) {
         this.pits = pits;
     }
+
 }

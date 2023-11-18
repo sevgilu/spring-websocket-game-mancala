@@ -1,6 +1,6 @@
 package com.suslu.spring.websocket.game.mancala.enums;
 
-public enum PlayerTurn {
+public enum PlayerType {
     PLAYER_1,
     PLAYER_2
 }

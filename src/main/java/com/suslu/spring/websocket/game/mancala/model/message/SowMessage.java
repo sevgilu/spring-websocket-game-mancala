@@ -2,7 +2,7 @@ package com.suslu.spring.websocket.game.mancala.model.message;
 
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 
-public class MoveMessage {
+public class SowMessage {
     private String gameId;
     private PlayerType senderPlayer;
     private int pitIndex;

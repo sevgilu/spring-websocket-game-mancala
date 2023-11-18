@@ -20,7 +20,6 @@ public class MancalaGameController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-
     @PostMapping("/join")
     public ResponseEntity<MancalaGameResponse> joinGame(@RequestBody Player player){
         MancalaGameResponse response = null;

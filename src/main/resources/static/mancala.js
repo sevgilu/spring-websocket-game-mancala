@@ -91,16 +91,15 @@ $(document).ready(function() {
         let pitId = $(this).attr('id');
         let pitIndex = parseInt(pitId.substring(4))
 
-        let validMove = isValidMove(pitIndex);
-
-        if(validMove) {
-            makeMove(pitIndex)
+        let validPit = isValidPit(pitIndex);
+        if(validPit) {
+            sowStones(pitIndex)
         }
     });
 });
 
-function isValidMove(pitIndex) {
-    let validMove = false;
+function isValidPit(pitIndex) {
+    let validPit = false;
 
     if(gameState == "WAITING_FOR_PLAYER_2") {
         alert("Please wait for an opponent!");
@@ -118,15 +117,19 @@ function isValidMove(pitIndex) {
                         (pageOwnerPlayerType == "PLAYER_2" && pitIndex <= 6 )){
                 alert("Choose one of your own pits!");
             } else {
-                validMove = true ;
+                let stoneCount = $("#" + pitIndex).text();
+                if(stoneCount > 0) {
+                } else {
+                    validPit = true ;
+                }
             }
         }
     }
-    return validMove;
+    return validPit;
 }
 
-function makeMove(pitIndex) {
-    let destination = "/app/game/move";
+function sowStones(pitIndex) {
+    let destination = "/app/game/sow";
     let jsonBody = JSON.stringify({
                    'gameId': $("#gameId").val(),
                    'senderPlayer': pageOwnerPlayerType,

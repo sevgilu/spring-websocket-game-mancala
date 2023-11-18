@@ -1,6 +1,6 @@
 package com.suslu.spring.websocket.game.mancala.controller;
 
-import com.suslu.spring.websocket.game.mancala.model.message.MoveMessage;
+import com.suslu.spring.websocket.game.mancala.model.message.SowMessage;
 import com.suslu.spring.websocket.game.mancala.model.response.MancalaGameResponse;
 import com.suslu.spring.websocket.game.mancala.service.MancalaMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ public class MancalaWebsocketMessageController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/game/move")
-    ResponseEntity<MancalaGameResponse> makeMove(MoveMessage moveMessage) {
-        MancalaGameResponse response = mancalaMessageService.makeMove(moveMessage);
+    @MessageMapping("/game/sow")
+    ResponseEntity<MancalaGameResponse> SowStones(SowMessage sowMessage) {
+        MancalaGameResponse response = mancalaMessageService.sowStones(sowMessage);
         simpMessagingTemplate.convertAndSend(
-                "/topic/game-state/" + moveMessage.getGameId(), response);
+                "/topic/game-state/" + sowMessage.getGameId(), response);
         return ResponseEntity.ok(response);
     }
 }

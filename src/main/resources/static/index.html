@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Message App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="/mancala.js"></script>
+    <script src="/websocket.js"></script>
+</head>
+<body>
+    <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable Javascript and reload this page!</h2></noscript>
+    <div id="main-content" class="container">
+        <div class="row">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">What is your name?</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                    <button id="joinGame" class="btn btn-default" type="submit">Join a game</button>
+                    <button id="leftGame" class="btn btn-default" type="submit" disabled="disabled">Left the game</button>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="gameId">Game:</label><output id="gameId"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="board-content" class="container">
+        <div class="row">
+            <span id="gameStateMessage">Enter your name and join a game</span>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <TABLE id="gameBoard" >
+                    <td>
+                        <table>
+                            <tr>
+                                <td class="pitTitle" id="bigPitTitlePlayer2">Larger Pit</td>
+                            </tr>
+                            <tr>
+                                <td class="bigPitValue" id="big_pit_13">0</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-6</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_12">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-5</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_11">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_10">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-3</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_9">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-2</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_8">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitTitle">Player2 Pit-1</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitValue" id="pit_7">0</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_0">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-1</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_1">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-2</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_2">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-3</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_3">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-4</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_4">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-5</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td class="pitValue" id="pit_5">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pitTitle">Player1 Pit-6</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td class="bigPitValue" id="pit_6">0</td>
+                            </tr>
+                            <tr>
+                                <td class="pitTitle" id="bigPitTitlePlayer1">Larger Pit</td>
+                            </tr>
+                        </table>
+                    </td>
+                </TABLE>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.suslu.spring.websocket.game.mancala.config;
+package com.suslu.spring.websocket.game.mancala.helper;
 
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 

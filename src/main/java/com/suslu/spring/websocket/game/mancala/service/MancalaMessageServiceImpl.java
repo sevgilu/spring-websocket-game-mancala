@@ -1,4 +1,4 @@
-package com.suslu.spring.websocket.game.mancala.service.impl;
+package com.suslu.spring.websocket.game.mancala.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;

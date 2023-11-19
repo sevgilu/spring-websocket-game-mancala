@@ -1,6 +1,6 @@
 package com.suslu.spring.websocket.game.mancala.model;
 
-import com.suslu.spring.websocket.game.mancala.config.MancalaConstants;
+import com.suslu.spring.websocket.game.mancala.helper.MancalaConstants;
 import com.suslu.spring.websocket.game.mancala.enums.GameState;
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 

@@ -5,7 +5,17 @@ let gameState;
 $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#joinGame" ).click(() => joinGame());
+    $( "#leftGame" ).click(() => leftGame());
 });
+
+function leftGame() {
+    let destination = "/app/game/left";
+    let jsonBody = JSON.stringify({
+                   'gameId': $("#gameId").val(),
+                   'senderPlayer': pageOwnerPlayerType
+               });
+    sendMessageThroughWebsocket(destination, jsonBody)
+}
 
 function joinGame() {
     let name = document.getElementById("name").value;
@@ -21,8 +31,7 @@ function joinGame() {
                 "name": name
             }),
             success: function (data) {
-                initializePageWithGame(data);
-                connectToWebsocket_GameState(data.gameId)
+                initializePageConnect(data);
                 console.log("Joined to gameId: " + data.gameId);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -32,7 +41,7 @@ function joinGame() {
     }
 }
 
-function initializePageWithGame(data) {
+function initializePageConnect(data) {
     // update main-content
     $("#gameId").text(data.gameId);
     $("#name").prop("disabled", true);
@@ -40,8 +49,8 @@ function initializePageWithGame(data) {
     $("#leftGame").prop("disabled", false);
 
     // update big pits
-    $("#bigPitTitlePlayer1").text(data.player1.name + "'s larger pit");
-    $("#bigPitTitlePlayer2").text(data.player2 == null ? "second player" : data.player2.name + "'s larger pit");
+    $("#bigPitTitlePlayer1").text(data.player1.name + "'s big pit");
+    $("#bigPitTitlePlayer2").text(data.player2 == null ? "second player" : data.player2.name + "'s big pit");
 
     // set player in the page
     if(data.creatorOfTheGame) {
@@ -50,10 +59,19 @@ function initializePageWithGame(data) {
         pageOwnerPlayerType = "PLAYER_2";
     }
 
-    updateBoard(data)
+    updateGameBoard(data)
+    connectToWebsocket_GameState(data.gameId)
 }
 
-function updateBoard(data) {
+function updateGameBoard(data) {
+    if(data.gameId != null) {
+        refreshGameBoard(data);
+    } else {
+        clearPageAndDisconnect(data.response);
+    }
+}
+
+function refreshGameBoard(data) {
     // set whose turn is it
     currentPlayer = data.currentPlayer;
     // set state of game
@@ -67,10 +85,10 @@ function updateBoard(data) {
     if (gameState == "WAITING_FOR_PLAYER_2") {
         $("#bigPitTitlePlayer1").background="#333";
         $("#bigPitTitlePlayer2").background="#333";
-        $("#gameStateMessage").text("Waiting for opponent...");
+        setUserMessage("Waiting for opponent...");
     } else if (gameState == "ACTIVE") {
         $("#bigPitTitlePlayer2").text(data.player2 == null ? "second player" : data.player2.name + "'s larger pit");
-        $("#gameStateMessage").text(pageOwnerPlayerType == currentPlayer ? "It's your turn!" : "Wait! It's the opponent's turn.");
+        setUserMessage(pageOwnerPlayerType == currentPlayer ? "It's your turn!" : "Wait! It's the opponent's turn.");
 
         if(currentPlayer == "PLAYER_1") {
             $("#bigPitTitlePlayer1").background="#1472a9";
@@ -91,8 +109,39 @@ function updateBoard(data) {
         } else {
             winnerMessage = "Sorry you lost :( ";
         }
-        $("#gameStateMessage").text("GAME OVER!!! " + winnerMessage);
+        setUserMessage("GAME OVER!!! " + winnerMessage);
     }
+}
+
+function setUserMessage(message) {
+    $("#gameStateMessage").text(message);
+}
+
+function clearPageAndDisconnect(message) {
+    alert(message);
+    // update main-content
+    $("#gameId").text("");
+    $("#name").prop("disabled", false);
+    $("#joinGame").prop("disabled", false);
+    $("#leftGame").prop("disabled", true);
+
+    setUserMessage("Enter your name and join a game");
+
+    // update big pits
+    $("#bigPitTitlePlayer1").text("Big Pit");
+    $("#bigPitTitlePlayer2").text("Big Pit");
+
+    // update pit values
+    for (let i = 0; i < 14; i++) {
+        $("#pit_" + i).text(0);
+    }
+
+    // set player in the page
+    pageOwnerPlayerType = null;
+    currentPlayer = null;
+    gameState = null;
+
+    disconnectFromWebsocket_GameState();
 }
 
 $(document).ready(function() {

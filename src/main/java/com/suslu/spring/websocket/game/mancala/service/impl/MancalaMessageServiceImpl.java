@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 import com.suslu.spring.websocket.game.mancala.exception.MancalaRuntimeException;
 import com.suslu.spring.websocket.game.mancala.model.MancalaGame;
+import com.suslu.spring.websocket.game.mancala.model.message.LeftMessage;
 import com.suslu.spring.websocket.game.mancala.model.message.SowMessage;
 import com.suslu.spring.websocket.game.mancala.model.response.MancalaGameResponse;
 import com.suslu.spring.websocket.game.mancala.service.MancalaMessageService;
@@ -18,6 +19,12 @@ public class MancalaMessageServiceImpl implements MancalaMessageService {
     MancalaRegistryService mancalaRegistryService;
     @Autowired
     PlayMancalaGame mancalaPlayGame;
+
+    @Override
+    public MancalaGameResponse leftGame(LeftMessage leftMessage) {
+        String message = mancalaRegistryService.leftGame(leftMessage.getGameId(), leftMessage.getSenderPlayer());
+        return new MancalaGameResponse(message);
+    }
 
     @Override
     public MancalaGameResponse sowStones(SowMessage sowMessage) {

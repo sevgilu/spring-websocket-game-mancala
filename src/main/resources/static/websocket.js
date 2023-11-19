@@ -9,7 +9,7 @@ function connectToWebsocket_GameState(gameId){
             onConnect: (frame) => {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/game-state/'+gameId, (response) => {
-                    updateBoard(JSON.parse(response.body));
+                    updateGameBoard(JSON.parse(response.body));
                 });
             },
             onWebSocketError : (error) => {
@@ -22,6 +22,10 @@ function connectToWebsocket_GameState(gameId){
     });
 
     stompClient.activate();
+}
+
+function disconnectFromWebsocket_GameState(){
+    stompClient.deactivate();
 }
 
 function sendMessageThroughWebsocket(destination, jsonBody) {

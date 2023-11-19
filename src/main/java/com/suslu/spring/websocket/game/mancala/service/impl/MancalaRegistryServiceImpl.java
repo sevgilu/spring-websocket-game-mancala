@@ -2,6 +2,7 @@ package com.suslu.spring.websocket.game.mancala.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.suslu.spring.websocket.game.mancala.enums.GameState;
+import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 import com.suslu.spring.websocket.game.mancala.exception.MancalaRuntimeException;
 import com.suslu.spring.websocket.game.mancala.model.MancalaGame;
 import com.suslu.spring.websocket.game.mancala.model.Player;
@@ -79,6 +80,33 @@ public class MancalaRegistryServiceImpl implements MancalaRegistryService {
         waitingGames.remove(gameId);
 
         return mancalaGame;
+    }
+
+    @Override
+    public String leftGame(String gameId, PlayerType senderPlayer) {
+        String message;
+        MancalaGame game = waitingGames.get(gameId);
+
+        if(game == null) {
+            message = leftActiveGame(gameId, senderPlayer);
+        } else {
+            waitingGames.remove(gameId);
+            registeredPlayers.remove(game.getPlayer1());
+            message = game.getPlayer1().getName() + " left the game";
+        }
+
+        return message;
+    }
+
+    private String leftActiveGame(String gameId, PlayerType senderPlayer) {
+        MancalaGame game = getActiveMancalaGame(gameId);
+
+        activeGames.remove(gameId);
+        registeredPlayers.remove(game.getPlayer1());
+        registeredPlayers.remove(game.getPlayer2());
+
+        Player leavingPlayer = PlayerType.PLAYER_1.equals(senderPlayer) ? game.getPlayer1() : game.getPlayer2();
+        return leavingPlayer.getName() + " left the game";
     }
 
 

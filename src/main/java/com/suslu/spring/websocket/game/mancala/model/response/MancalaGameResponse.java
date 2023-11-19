@@ -15,6 +15,7 @@ public class MancalaGameResponse {
     private PlayerType currentPlayer;
     private boolean creatorOfTheGame;
     private List<Integer> pits;
+    private PlayerType winnerPlayer;
 
     public MancalaGameResponse(){}
 
@@ -84,5 +85,13 @@ public class MancalaGameResponse {
 
     public void setPits(List<Integer> pits) {
         this.pits = pits;
+    }
+
+    public PlayerType getWinnerPlayer() {
+        return winnerPlayer;
+    }
+
+    public void setWinnerPlayer(PlayerType winnerPlayer) {
+        this.winnerPlayer = winnerPlayer;
     }
 }

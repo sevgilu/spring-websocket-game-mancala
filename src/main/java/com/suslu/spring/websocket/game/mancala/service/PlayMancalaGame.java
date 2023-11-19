@@ -14,18 +14,20 @@ public class PlayMancalaGame {
 
     public void sowStones(MancalaGame game, int pitIndex) {
         // validate before sow
-        checkGameStateToSow(game);
-        checkPit(game, pitIndex);
-
+        validate(game, pitIndex);
         // distribute stones
         int lastSowedPitIndex = distributeStones(game, pitIndex);
-
-        // switch player if required
-        switchPlayerIfRequired(game, lastSowedPitIndex);
-
-        // TODO
         // check If game over
-        // end game
+        controlIfGameIsOverAndProceed(game);
+        // switch player if game is active and required
+        if(GameState.ACTIVE.equals(game.getGameState())) {
+            switchPlayerIfRequired(game, lastSowedPitIndex);
+        }
+    }
+
+    private void validate(MancalaGame game, int pitIndex) {
+        checkGameStateToSow(game);
+        checkPit(game, pitIndex);
     }
 
     private void checkGameStateToSow(MancalaGame game) {
@@ -105,6 +107,45 @@ public class PlayMancalaGame {
                         pitIndex != MancalaConstants.BIG_PIT_INDEX_2);
     }
 
+    private void controlIfGameIsOverAndProceed(MancalaGame game) {
+        int remainingStoneCount = game.currentPlayersRemainingStoneCount();
+        if(remainingStoneCount == 0) {
+            endGame(game);
+        }
+    }
+
+    private void endGame(MancalaGame game) {
+        // get current players stone count
+        int currentPlayersBigPitIndex = game.currentPlayersBigPitIndex();
+        int currentPlayersBigPitCount = game.getPits().get(currentPlayersBigPitIndex);
+
+        // move opponent's remaining stones to his big pit and get stone count
+        int opponentsBigPitCount = collectOpponentsStonesToBigPit(game);
+
+        if(currentPlayersBigPitCount > opponentsBigPitCount) {
+            game.setWinnerPlayer(game.getCurrentPlayer());
+        } else if(currentPlayersBigPitCount < opponentsBigPitCount) {
+            game.setWinnerPlayer(game.opponentsPlayerType());
+        } // equals stone count means game is even. No winner.
+
+        game.setGameState(GameState.FINISHED);
+    }
+
+    private int collectOpponentsStonesToBigPit(MancalaGame game) {
+        int opponentBigPitIndex = game.opponentsBigPitIndex();
+        int[] indexes = game.pitIndexIntervalForOpponent();
+        List<Integer> pits = game.getPits();
+
+        int bigPitCount = pits.get(opponentBigPitIndex);
+        for (int i = indexes[0]; i <= indexes[1]; i++) {
+            bigPitCount += pits.get(i);
+            pits.set(i, 0);
+        }
+        pits.set(opponentBigPitIndex, bigPitCount);
+
+        return bigPitCount;
+    }
+
     public void switchPlayerIfRequired(MancalaGame game, int lastSowedPitIndex) {
         int currentPlayersBigPitIndex = game.currentPlayersBigPitIndex();
 
@@ -116,4 +157,5 @@ public class PlayMancalaGame {
             }
         }
     }
+
 }

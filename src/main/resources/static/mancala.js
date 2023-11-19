@@ -64,36 +64,47 @@ function updateBoard(data) {
         $("#pit_" + i).text(pits[i]);
     }
 
-    if (data.gameState == "WAITING_FOR_PLAYER_2") {
-        $("#namePlayer1").background="#333";
-        $("#namePlayer2").background="#333";
+    if (gameState == "WAITING_FOR_PLAYER_2") {
+        $("#bigPitTitlePlayer1").background="#333";
+        $("#bigPitTitlePlayer2").background="#333";
         $("#gameStateMessage").text("Waiting for opponent...");
-    } else if (data.gameState == "ACTIVE") {
+    } else if (gameState == "ACTIVE") {
         $("#bigPitTitlePlayer2").text(data.player2 == null ? "second player" : data.player2.name + "'s larger pit");
         $("#gameStateMessage").text(pageOwnerPlayerType == currentPlayer ? "It's your turn!" : "Wait! It's the opponent's turn.");
 
         if(currentPlayer == "PLAYER_1") {
-            $("#namePlayer1").background="#1472a9";
-            $("#namePlayer2").background="#333";
+            $("#bigPitTitlePlayer1").background="#1472a9";
+            $("#bigPitTitlePlayer2").background="#333";
         } else {
-            $("#namePlayer1").background="#333";
-            $("#namePlayer2").background="#1472a9";
+            $("#bigPitTitlePlayer1").background="#333";
+            $("#bigPitTitlePlayer2").background="#1472a9";
         }
-    } else if (data.gameState == "FINISHED") {
-        $("#namePlayer1").background="#333";
-        $("#namePlayer2").background="#333";
-        // TODO
+    } else if (gameState == "FINISHED") {
+        $("#bigPitTitlePlayer1").background="#333";
+        $("#bigPitTitlePlayer2").background="#333";
+
+        let winnerMessage;
+        if(data.winnerPlayer == null){
+            winnerMessage = "Game is even.";
+        } else if (pageOwnerPlayerType == data.winnerPlayer) {
+            winnerMessage = "Congratulations you win :)";
+        } else {
+            winnerMessage = "Sorry you lost :( ";
+        }
+        $("#gameStateMessage").text("GAME OVER!!! " + winnerMessage);
     }
 }
 
 $(document).ready(function() {
     $(document).on('click', '.pitValue', function(){
-        let pitId = $(this).attr('id');
-        let pitIndex = parseInt(pitId.substring(4))
+        if (gameState == "ACTIVE"){
+            let pitId = $(this).attr('id');
+            let pitIndex = parseInt(pitId.substring(4))
 
-        let validPit = isValidPit(pitIndex);
-        if(validPit) {
-            sowStones(pitIndex)
+            let validPit = isValidPit(pitIndex);
+            if(validPit) {
+                sowStones(pitIndex)
+            }
         }
     });
 });

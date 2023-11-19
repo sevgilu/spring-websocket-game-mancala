@@ -15,6 +15,7 @@ public class MancalaGame {
     private PlayerType currentPlayer;
     private boolean creatorOfTheGame;
     private List<Integer> pits;
+    private PlayerType winnerPlayer;
 
     public MancalaGame(){}
 
@@ -39,14 +40,82 @@ public class MancalaGame {
         }
     }
 
+
+    /**
+     * @return PlayerType of opponent
+     */
+    public PlayerType opponentsPlayerType() {
+        return PlayerType.PLAYER_1.equals(currentPlayer) ?
+                PlayerType.PLAYER_2 : PlayerType.PLAYER_1;
+    }
+
+    /**
+     * @return int index of opponent's big pit
+     */
     public int opponentsBigPitIndex() {
         return PlayerType.PLAYER_1.equals(currentPlayer) ?
                 MancalaConstants.BIG_PIT_INDEX_2 : MancalaConstants.BIG_PIT_INDEX_1;
     }
 
+    /**
+     * @return int index of current player's big pit
+     */
     public int currentPlayersBigPitIndex() {
         return PlayerType.PLAYER_1.equals(currentPlayer) ?
                 MancalaConstants.BIG_PIT_INDEX_1 : MancalaConstants.BIG_PIT_INDEX_2;
+    }
+
+    /**
+     * calculates stone count of current player in the pits (bigPit not included)
+     * @return int stone count
+     */
+    public int currentPlayersRemainingStoneCount() {
+        int stoneCount = 0;
+        int[] indexes = pitIndexIntervalForCurrentPlayer();
+        for (int i = indexes[0]; i <= indexes[1]; i++) {
+            stoneCount += pits.get(i);
+        }
+        return stoneCount;
+    }
+
+    /**
+     * sets begin and end index of the pits of the CURRENT PLAYER
+     * both are included indexes
+     * @return an int array with two elements.
+     */
+    public int[] pitIndexIntervalForCurrentPlayer() {
+        int[] indexes = new int[2];
+        if( PlayerType.PLAYER_1.equals(currentPlayer) ) {
+            // CurrentPlayer is Player1
+            indexes[0] = 0;
+            indexes[1] = MancalaConstants.BIG_PIT_INDEX_1 - 1;
+        } else {
+            // CurrentPlayer is Player2
+            indexes[0] = MancalaConstants.BIG_PIT_INDEX_1 + 1;
+            indexes[1] = MancalaConstants.BIG_PIT_INDEX_2 - 1;
+        }
+        return indexes;
+    }
+
+    /**
+     * sets begin and end index of the pits of the OPPONENT
+     * both are included indexes
+     * @return an int array with two elements.
+     */
+    public int[] pitIndexIntervalForOpponent() {
+        int[] indexes = new int[2];
+
+        if( PlayerType.PLAYER_1.equals(currentPlayer) ) {
+            // Meaning opponent is Player2.Returning pit index interval for Player2.
+            indexes[0] = MancalaConstants.BIG_PIT_INDEX_1 + 1;
+            indexes[1] = MancalaConstants.BIG_PIT_INDEX_2 - 1;
+        } else {
+            // else currentPlayer is Player2.
+            // Meaning opponent is Player1.Returning pit index interval for Player1.
+            indexes[0] = 0;
+            indexes[1] = MancalaConstants.BIG_PIT_INDEX_1 - 1;
+        }
+        return indexes;
     }
 
     public String getGameId() {
@@ -105,4 +174,11 @@ public class MancalaGame {
         this.pits = pits;
     }
 
+    public PlayerType getWinnerPlayer() {
+        return winnerPlayer;
+    }
+
+    public void setWinnerPlayer(PlayerType winnerPlayer) {
+        this.winnerPlayer = winnerPlayer;
+    }
 }

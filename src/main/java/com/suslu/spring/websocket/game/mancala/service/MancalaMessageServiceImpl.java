@@ -7,9 +7,6 @@ import com.suslu.spring.websocket.game.mancala.model.MancalaGame;
 import com.suslu.spring.websocket.game.mancala.model.message.LeftMessage;
 import com.suslu.spring.websocket.game.mancala.model.message.SowMessage;
 import com.suslu.spring.websocket.game.mancala.model.response.MancalaGameResponse;
-import com.suslu.spring.websocket.game.mancala.service.MancalaMessageService;
-import com.suslu.spring.websocket.game.mancala.service.MancalaRegistryService;
-import com.suslu.spring.websocket.game.mancala.service.PlayMancalaGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

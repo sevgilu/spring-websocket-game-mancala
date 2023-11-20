@@ -7,7 +7,6 @@ import com.suslu.spring.websocket.game.mancala.exception.MancalaRuntimeException
 import com.suslu.spring.websocket.game.mancala.model.MancalaGame;
 import com.suslu.spring.websocket.game.mancala.model.Player;
 import com.suslu.spring.websocket.game.mancala.model.response.MancalaGameResponse;
-import com.suslu.spring.websocket.game.mancala.service.MancalaRegistryService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

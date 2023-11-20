@@ -28,14 +28,14 @@ public class MancalaGameHelper {
     /**
      * returns Big Pit index of current player
      */
-    public int currentPlayersBigPitIndex() {
+    public int getCurrentPlayersBigPitIndex() {
         return MancalaConstants.getBigPitIndexOf(game.getCurrentPlayer());
     }
 
     /**
      * returns Big Pit index of opponent
      */
-    public int opponentsBigPitIndex() {
+    public int getOpponentsBigPitIndex() {
         return MancalaConstants.getBigPitIndexOf(getOpponentPlayer());
     }
 
@@ -43,7 +43,7 @@ public class MancalaGameHelper {
      * calculates stone count of current player in the pits (bigPit not included)
      * returns int stone count
      */
-    public int currentPlayersRemainingStoneCount() {
+    public int getCurrentPlayersRemainingStoneCount() {
         return getPlayersRemainingStoneCount(game.getCurrentPlayer());
     }
 
@@ -93,13 +93,33 @@ public class MancalaGameHelper {
     }
 
     /**
+     * returns stoneBig Pit index for given playerType
+     */
+    public int getStoneCountInPlayersBigPit(PlayerType playerType) {
+        int bigPitIndex = MancalaConstants.getBigPitIndexOf(playerType);
+        return game.getPits().get(bigPitIndex);
+    }
+
+    /**
+     * Switches currentPlayer
+     * PLAYER_1 to PLAYER_2  OR  PLAYER_2 to PLAYER_1
+     */
+    public void switchCurrentPlayer() {
+        if (PlayerType.PLAYER_1.equals(game.getCurrentPlayer())) {
+            game.setCurrentPlayer(PlayerType.PLAYER_2);
+        } else {
+            game.setCurrentPlayer(PlayerType.PLAYER_1);
+        }
+    }
+
+    /**
      * decide who the winner is and update game as finished
      */
     public void finishGame() {
         PlayerType opponent = getOpponentPlayer();
         // get players' stone counts in big pits
-        int currentPlayersBigPitCount = getPlayersBigPitCount(game.getCurrentPlayer());
-        int opponentsBigPitCount = getPlayersBigPitCount(opponent);
+        int currentPlayersBigPitCount = getStoneCountInPlayersBigPit(game.getCurrentPlayer());
+        int opponentsBigPitCount = getStoneCountInPlayersBigPit(opponent);
 
         PlayerType winner = null;
         if(currentPlayersBigPitCount > opponentsBigPitCount) {
@@ -110,26 +130,6 @@ public class MancalaGameHelper {
 
         game.setWinnerPlayer(winner);
         game.setGameState(GameState.FINISHED);
-    }
-
-    /**
-     * returns Big Pit index for given playerType
-     */
-    public int getPlayersBigPitCount(PlayerType playerType) {
-        int bigPitIndex = MancalaConstants.getBigPitIndexOf(playerType);
-        return game.getPits().get(bigPitIndex);
-    }
-
-    /**
-     * Switches currentPlayer
-     * PLAYER_1 to PLAYER_2  OR  PLAYER_2 to PLAYER_1
-     */
-    public void switchCurrentPlayer() {
-        if (PlayerType.PLAYER_1 == game.getCurrentPlayer()) {
-            game.setCurrentPlayer(PlayerType.PLAYER_2);
-        } else {
-            game.setCurrentPlayer(PlayerType.PLAYER_1);
-        }
     }
 
 }

@@ -1,9 +1,9 @@
 package com.suslu.spring.websocket.game.mancala.service;
 
-import com.suslu.spring.websocket.game.mancala.helper.MancalaConstants;
 import com.suslu.spring.websocket.game.mancala.enums.GameState;
 import com.suslu.spring.websocket.game.mancala.enums.PlayerType;
 import com.suslu.spring.websocket.game.mancala.exception.MancalaRuntimeException;
+import com.suslu.spring.websocket.game.mancala.helper.MancalaConstants;
 import com.suslu.spring.websocket.game.mancala.helper.MancalaGameHelper;
 import com.suslu.spring.websocket.game.mancala.model.MancalaGame;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public class PlayMancalaGame {
 
     private int sowStonesNow(MancalaGameHelper gameHelper, int pitIndex) {
         List<Integer> pits = gameHelper.getGame().getPits();
-        int opponentsBigPitIndex = gameHelper.opponentsBigPitIndex();
+        int opponentsBigPitIndex = gameHelper.getOpponentsBigPitIndex();
         int lastSowedPitIndex = pitIndex;   // So returns the given pit if there is no stones
         int stoneCount = pits.get(pitIndex);
         pits.set(pitIndex, 0);
@@ -88,7 +88,7 @@ public class PlayMancalaGame {
                 gameHelper.isCurrentPlayersPitIndex(lastSowedPitIndex) &&
                 pits.get(lastSowedPitIndex) == 1
         ) {
-            int currentPlayersBigPitIndex = gameHelper.currentPlayersBigPitIndex();
+            int currentPlayersBigPitIndex = gameHelper.getCurrentPlayersBigPitIndex();
             int oppositeIndexToCapture = MancalaConstants.OPPOSITE_INDEX[lastSowedPitIndex];
 
             int newCountOfBigPit = pits.get(currentPlayersBigPitIndex) + pits.get(oppositeIndexToCapture) + 1;
@@ -100,7 +100,7 @@ public class PlayMancalaGame {
     }
 
     private void controlIfGameIsOverAndFinish(MancalaGameHelper gameHelper) {
-        int remainingStoneCount = gameHelper.currentPlayersRemainingStoneCount();
+        int remainingStoneCount = gameHelper.getCurrentPlayersRemainingStoneCount();
         if(remainingStoneCount == 0) {
             // move opponent's remaining stones to his big pit and get stone count
             gameHelper.moveOpponentsRemainingStonesToBigPit();
@@ -109,7 +109,7 @@ public class PlayMancalaGame {
     }
 
     private void switchPlayerIfRequired(MancalaGameHelper gameHelper, int lastSowedPitIndex) {
-        int currentPlayersBigPitIndex = gameHelper.currentPlayersBigPitIndex();
+        int currentPlayersBigPitIndex = gameHelper.getCurrentPlayersBigPitIndex();
 
         if(currentPlayersBigPitIndex != lastSowedPitIndex) {
             gameHelper.switchCurrentPlayer();;

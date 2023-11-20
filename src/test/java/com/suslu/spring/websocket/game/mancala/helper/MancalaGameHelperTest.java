@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class MancalaGameHelperTest {
-
     private MancalaGameHelperBuilder helperBuilder = new MancalaGameHelperBuilder();
 
     @ParameterizedTest

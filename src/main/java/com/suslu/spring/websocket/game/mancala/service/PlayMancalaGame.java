@@ -77,11 +77,12 @@ public class PlayMancalaGame {
             }
             currentIndex = 0;
         }
-        captureStonesIfAvailable(gameHelper, lastSowedPitIndex);
+
+        captureOpponentsStonesWithEmptyPitRule(gameHelper, lastSowedPitIndex);
         return lastSowedPitIndex;
     }
 
-    private void captureStonesIfAvailable(MancalaGameHelper gameHelper, int lastSowedPitIndex) {
+    private void captureOpponentsStonesWithEmptyPitRule(MancalaGameHelper gameHelper, int lastSowedPitIndex) {
         List<Integer> pits = gameHelper.getGame().getPits();
 
         if( ! MancalaConstants.isBigPitIndex(lastSowedPitIndex)  &&
